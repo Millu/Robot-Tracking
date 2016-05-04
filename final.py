@@ -12,7 +12,6 @@ class Intruder:
 #take a image and find the countours of the red cylinder
 def findContours():
     
-
     setPicSize("small")
     image = takePicture()
     savePicture(image, "image.jpg")
@@ -29,6 +28,7 @@ def findContours():
     targets = sorted(targets, key=cv2.contourArea, reverse=True)
     
     center = (0,0)
+    radius = 0
     if len(targets) == 0:
         return targets, center
 
@@ -38,18 +38,20 @@ def findContours():
     center = (int(x), int(y))
     cv2.circle(image,center,radius,(0,255,0),2)
     
-    print center
-    return targets, center
+    print center, radius
+    return targets, center, radius
 
 
 #cv2.minEnclosingCirle()
 
 #have robot rotate and look for intruder
 def search():
-    targets = findContours()
+    targets, center, radius = findContours()
     if(len(targets) == 0):
+        checkWall()
         turnBy(30, "deg")
         search()
+
 
 
 
@@ -62,25 +64,13 @@ def checkWall():
 
 #move towards intruder
 def moveToIntruder():
-    #checkWall()
     search()
 
 
-#when the robot is stationary
-def searchFast():
-    targets = findContours()
-    while(len(targets) == 0):
-        turnBy(20, "deg")
-        targets = findContours()
-
-#move towards intruder when robot is stationary
-def moveToIntruderFast():
-    forward(1,5)
-    checkWall()
-    searchFast()
-
-#have robot center itself
-# def reorient(img):
+# TODO
+# segment the image 
+# smooth turning based on segement of the image blob is in
+# move distance based on how far the blob is based on size   
 
 if __name__ == '__main__':
     # start = time.time()
