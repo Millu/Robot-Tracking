@@ -52,9 +52,6 @@ def search():
         turnBy(30, "deg")
         search()
 
-
-
-
 #check if infront of a wall
 def checkWall():
     distance = getObstacle()
